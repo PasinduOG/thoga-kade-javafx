@@ -1,4 +1,4 @@
-package edu.icet.model.dto;
+package edu.icet.model;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @Getter
 @ToString
-public class CustomerDto {
+public class Customer {
     private String id;
     private String title;
     private String name;
