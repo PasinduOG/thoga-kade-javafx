@@ -5,6 +5,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.icet.controller.DashboardController">
    <children>
@@ -13,25 +14,32 @@
             <Image url="@../img/thogakade2.png" />
          </image>
       </ImageView>
-      <AnchorPane opacity="0.5" prefHeight="500.0" prefWidth="801.0" style="-fx-background-color: Black;" />
-      <AnchorPane layoutX="195.0" layoutY="79.0" prefHeight="335.0" prefWidth="409.0" style="-fx-background-color: White;">
+      <AnchorPane opacity="0.5" prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: Black;">
          <children>
-            <Button layoutX="109.0" layoutY="73.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="187.0" text="Customer Management">
+            <Text fill="WHITE" layoutX="175.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to Thoga Kade">
+               <font>
+                  <Font name="System Bold" size="39.0" />
+               </font>
+            </Text>
+         </children></AnchorPane>
+      <AnchorPane layoutX="195.0" layoutY="113.0" prefHeight="335.0" prefWidth="409.0" style="-fx-background-color: White;">
+         <children>
+            <Button layoutX="109.0" layoutY="73.0" mnemonicParsing="false" onAction="#btnOpenCustomerManagementOnAction" prefHeight="32.0" prefWidth="187.0" text="Customer Management">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Button>
-            <Button layoutX="109.0" layoutY="124.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="187.0" text="Item Management">
+            <Button layoutX="109.0" layoutY="124.0" mnemonicParsing="false" onAction="#btnOpenItemManagementOnAction" prefHeight="32.0" prefWidth="187.0" text="Item Management">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Button>
-            <Button layoutX="109.0" layoutY="176.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="187.0" text="Supplier Management">
+            <Button layoutX="109.0" layoutY="176.0" mnemonicParsing="false" onAction="#btnOpenSupplierManagementOnAction" prefHeight="32.0" prefWidth="187.0" text="Supplier Management">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Button>
-            <Button layoutX="109.0" layoutY="227.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="187.0" text="Employee Management">
+            <Button layoutX="109.0" layoutY="227.0" mnemonicParsing="false" onAction="#btnOpenEmployeeManagementOnAction" prefHeight="32.0" prefWidth="187.0" text="Employee Management">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>

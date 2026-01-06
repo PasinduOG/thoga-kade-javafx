@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -12,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.icet.controller.CustomerController">
+<AnchorPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.icet.controller.SupplierController">
    <children>
       <ImageView fx:id="rootPane" fitHeight="500.0" fitWidth="800.0" pickOnBounds="true">
          <image>
@@ -20,15 +18,15 @@
          </image>
       </ImageView>
       <AnchorPane opacity="0.5" prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: Black;" />
-      <TableView fx:id="tblCustomerDetails" layoutX="40.0" layoutY="280.0" prefHeight="206.0" prefWidth="722.0">
+      <TableView fx:id="tblSupplierDetails" layoutX="40.0" layoutY="280.0" prefHeight="206.0" prefWidth="722.0">
         <columns>
-          <TableColumn fx:id="colCustomerId" prefWidth="53.0" text="ID" />
-          <TableColumn fx:id="colCustomerType" prefWidth="60.0" text="Type" />
-            <TableColumn fx:id="colCustomerName" prefWidth="89.0" text="Name" />
-            <TableColumn fx:id="colDateOfBirth" prefWidth="91.0" text="Date of Birth" />
-            <TableColumn fx:id="colCustomerSalary" prefWidth="89.0" text="Salary" />
-            <TableColumn fx:id="colCustomerAddress" prefWidth="100.0" text="Address" />
-            <TableColumn fx:id="colCity" prefWidth="63.0" text="City" />
+          <TableColumn fx:id="colSupplierId" prefWidth="53.0" text="ID" />
+          <TableColumn fx:id="colSupplierName" prefWidth="67.0" text="Name" />
+            <TableColumn fx:id="colCompanyName" prefWidth="89.0" text="Company" />
+            <TableColumn fx:id="colPhone" prefWidth="84.0" text="Phone" />
+            <TableColumn fx:id="colEmail" prefWidth="89.0" text="Email" />
+            <TableColumn fx:id="colSupplierAddress" prefWidth="93.0" text="Address" />
+            <TableColumn fx:id="colCity" prefWidth="70.0" text="City" />
             <TableColumn fx:id="colProvince" prefWidth="89.0" text="Province" />
             <TableColumn fx:id="colPostalCode" prefWidth="87.0" text="Postal Code" />
         </columns>
@@ -36,16 +34,16 @@
       <AnchorPane prefHeight="200.0" prefWidth="200.0" />
       <AnchorPane layoutX="40.0" layoutY="13.0" prefHeight="256.0" prefWidth="722.0" style="-fx-background-color: White;">
          <children>
-            <TextField fx:id="txtCustomerId" editable="false" layoutX="107.0" layoutY="68.0" promptText="Customer ID" />
-            <ComboBox fx:id="cBoxCustomerType" layoutX="283.0" layoutY="68.0" prefWidth="150.0" promptText="Customer Type" />
-            <TextField fx:id="txtCustomerName" layoutX="459.0" layoutY="68.0" promptText="Customer Name" />
-            <DatePicker fx:id="dateBoxBirthday" layoutX="107.0" layoutY="118.0" prefHeight="25.0" prefWidth="149.0" promptText="Date of Birth" />
-            <TextField fx:id="txtCustomerSalary" layoutX="283.0" layoutY="118.0" promptText="Customer Salary" />
-            <TextField fx:id="txtCustomerAddress" layoutX="459.0" layoutY="118.0" promptText="Customer Address" />
-            <TextField fx:id="txtCity" layoutX="107.0" layoutY="167.0" promptText="City" />
-            <TextField fx:id="txtProvince" layoutX="283.0" layoutY="167.0" promptText="Province" />
-            <TextField fx:id="txtPostalCode" layoutX="459.0" layoutY="167.0" promptText="Postal Code" />
-            <Text layoutX="192.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer Management">
+            <TextField fx:id="txtSupplierId" layoutX="107.0" layoutY="68.0" promptText="Supplier ID" />
+            <TextField fx:id="txtSupplierName" layoutX="283.0" layoutY="68.0" promptText="Supplier Name" />
+            <TextField fx:id="txtCompanyName" layoutX="459.0" layoutY="68.0" promptText="Company Name" />
+            <TextField fx:id="txtSupplierAddress" layoutX="107.0" layoutY="118.0" promptText="Supplier Address" />
+            <TextField fx:id="txtCity" layoutX="283.0" layoutY="118.0" promptText="City" />
+            <TextField fx:id="txtProvince" layoutX="459.0" layoutY="118.0" promptText="Province" />
+            <TextField fx:id="txtPostalCode" layoutX="107.0" layoutY="167.0" promptText="Postal Code" />
+            <TextField fx:id="txtPhoneNumber" layoutX="283.0" layoutY="167.0" promptText="Phone Number" />
+            <TextField fx:id="txtEmail" layoutX="459.0" layoutY="167.0" promptText="Email Address" />
+            <Text layoutX="199.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Supplier Management">
                <font>
                   <Font name="System Bold" size="30.0" />
                </font>

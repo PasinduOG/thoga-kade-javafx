@@ -15,7 +15,7 @@ public class Starter extends Application {
     public void start(Stage stage) throws Exception {
         stage.setTitle("Login - Thoga Kade");
         stage.setResizable(false);
-        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/view/item_management.fxml"))));
+        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/view/dashboard.fxml"))));
         stage.show();
     }
 }
