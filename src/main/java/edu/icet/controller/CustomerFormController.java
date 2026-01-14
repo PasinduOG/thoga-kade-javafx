@@ -1,5 +1,7 @@
 package edu.icet.controller;
 
+import edu.icet.db.Database;
+import edu.icet.model.dto.CustomerDto;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +13,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.collections.FXCollections;
-import edu.icet.model.Customer;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.GaussianBlur;
@@ -19,17 +20,17 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
-public class CustomerController {
+public class CustomerFormController {
 
     private final Stage stage = new Stage();
 
-    private final ObservableList<Customer> customers = FXCollections.observableArrayList(
-            new Customer("C0001", "Mr", "Pasindu", "2002-09-08", 120000.0, "Horawala", "Matugama", "Western", "12108"),
-            new Customer("C0002", "Mr", "Pramuditha", "2004-07-18", 75000.0, "Raigama", "Bandaragama", "Western", "23432")
-    );
-    private String customerId = generateCustomerId();
+    private final ObservableList<CustomerDto> customers = FXCollections.observableArrayList();
+    private String customerId;
 
     @FXML
     private ImageView rootPane;
@@ -68,7 +69,7 @@ public class CustomerController {
     private DatePicker dateBoxBirthday;
 
     @FXML
-    private TableView<Customer> tblCustomerDetails;
+    private TableView<CustomerDto> tblCustomerDetails;
 
     @FXML
     private TextField txtCity;
@@ -100,7 +101,30 @@ public class CustomerController {
                 "Mr", "Mrs", "Miss"
         ));
 
-        txtCustomerId.setText(customerId);
+        try {
+            PreparedStatement statement = Database.getInstance().prepareStatement("SELECT * FROM customer");
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                CustomerDto customerDto = new CustomerDto(
+                        resultSet.getString("CustID"),
+                        resultSet.getString("CustTitle"),
+                        resultSet.getString("custName"),
+                        resultSet.getString("DOB"),
+                        resultSet.getDouble("salary"),
+                        resultSet.getString("CustAddress"),
+                        resultSet.getString("City"),
+                        resultSet.getString("Province"),
+                        resultSet.getString("PostalCode")
+                );
+
+                customers.add(customerDto);
+                customerId = generateCustomerId();
+                txtCustomerId.setText(customerId);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         colCustomerId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colCustomerName.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -140,9 +164,25 @@ public class CustomerController {
         String province = txtProvince.getText();
         String postalCode = txtPostalCode.getText();
 
-        Customer customer = new Customer(customerId, type, name, dob, salary, address, city, province, postalCode);
-        customers.add(customer);
+        try {
+            PreparedStatement preparedStatement = Database.getInstance().prepareStatement("INSERT INTO customer VALUES (?,?,?,?,?,?,?,?,?)");
 
+            preparedStatement.setObject(1, customerId);
+            preparedStatement.setObject(2, type);
+            preparedStatement.setObject(3, name);
+            preparedStatement.setObject(4, dob);
+            preparedStatement.setObject(5, salary);
+            preparedStatement.setObject(6, address);
+            preparedStatement.setObject(7, city);
+            preparedStatement.setObject(8, province);
+            preparedStatement.setObject(9, postalCode);
+
+            preparedStatement.executeUpdate();
+            tblCustomerDetails.refresh();
+
+    } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         customerId = generateCustomerId();
         txtCustomerId.setText(customerId);
     }
@@ -160,25 +200,25 @@ public class CustomerController {
 
     @FXML
     void btnUpdateOnAction(ActionEvent event) {
-        Customer getCustomerItem = tblCustomerDetails.getSelectionModel().getSelectedItem();
-        getCustomerItem.setTitle(cBoxCustomerType.getValue());
-        getCustomerItem.setName(txtCustomerName.getText());
-        getCustomerItem.setDob(String.valueOf(dateBoxBirthday.getValue()));
-        getCustomerItem.setSalary(Double.parseDouble(txtCustomerSalary.getText()));
-        getCustomerItem.setAddress(txtCustomerAddress.getText());
-        getCustomerItem.setCity(txtCity.getText());
-        getCustomerItem.setProvince(txtProvince.getText());
-        getCustomerItem.setPostalCode(txtPostalCode.getText());
-        tblCustomerDetails.refresh();
+//        Customer getCustomerItem = tblCustomerDetails.getSelectionModel().getSelectedItem();
+//        getCustomerItem.setTitle(cBoxCustomerType.getValue());
+//        getCustomerItem.setName(txtCustomerName.getText());
+//        getCustomerItem.setDob(String.valueOf(dateBoxBirthday.getValue()));
+//        getCustomerItem.setSalary(Double.parseDouble(txtCustomerSalary.getText()));
+//        getCustomerItem.setAddress(txtCustomerAddress.getText());
+//        getCustomerItem.setCity(txtCity.getText());
+//        getCustomerItem.setProvince(txtProvince.getText());
+//        getCustomerItem.setPostalCode(txtPostalCode.getText());
+//        tblCustomerDetails.refresh();
     }
 
     String generateCustomerId() {
         if (customers.isEmpty()) {
-            return "C0001";
+            return "C001";
         }
-        String lastCustomerId = customers.get(customers.size()-1).getId();
+        String lastCustomerId = customers.get(customers.size() - 1).getId();
         int lastNumber = Integer.parseInt(lastCustomerId.substring(1));
-        return String.format("C%04d", lastNumber + 1);
+        return String.format("C%03d", lastNumber + 1);
     }
 
     @FXML
@@ -193,7 +233,7 @@ public class CustomerController {
         stage.show();
     }
 
-    void clear(){
+    void clear() {
         customerId = generateCustomerId();
         txtCustomerId.setText(customerId);
         txtCustomerName.clear();

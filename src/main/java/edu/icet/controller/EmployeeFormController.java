@@ -19,9 +19,8 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Date;
 
-public class EmployeeController {
+public class EmployeeFormController {
 
     private final Stage stage = new Stage();
 

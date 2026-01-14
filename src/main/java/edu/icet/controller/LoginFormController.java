@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class LoginController {
+public class LoginFormController {
 
     @FXML
     public ImageView rootPane;

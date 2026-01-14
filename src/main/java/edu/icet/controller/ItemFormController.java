@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class ItemController {
+public class ItemFormController {
 
     private final Stage stage = new Stage();
 
