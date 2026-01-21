@@ -1,12 +1,9 @@
 package edu.icet;
 
-import edu.icet.db.Database;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.sql.Connection;
 
 public class Starter extends Application {
 
