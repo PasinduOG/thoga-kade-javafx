@@ -1,6 +1,8 @@
 package edu.icet.controller;
 
 import edu.icet.model.dto.ItemDto;
+import edu.icet.service.ItemService;
+import edu.icet.service.impl.ItemServiceImpl;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,7 +23,7 @@ import java.io.IOException;
 public class ItemFormController {
 
     private final Stage stage = new Stage();
-    private final ItemController controller = new ItemController();
+    private final ItemService service = new ItemServiceImpl();
 
     @FXML
     private TableColumn<?, ?> colCategory;
@@ -61,10 +63,10 @@ public class ItemFormController {
 
     @FXML
     void initialize() {
-        controller.loadData();
+        service.loadData();
         GaussianBlur blur = new GaussianBlur(10);
         rootPane.setEffect(blur);
-        txtItemCode.setText(controller.generateItemId());
+        txtItemCode.setText(service.generateItemId());
         cBoxCategory.setItems(FXCollections.observableArrayList(
                 "Electronics", "Grocery", "Furniture", "Clothing"
         ));
@@ -75,7 +77,7 @@ public class ItemFormController {
         colQty.setCellValueFactory(new PropertyValueFactory<>("qty"));
         colUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
 
-        tblItemDetails.setItems(controller.getArrayList());
+        tblItemDetails.setItems(service.getArrayList());
 
         tblItemDetails.getSelectionModel().selectedItemProperty().addListener(((observableValue, item, newValue) -> {
             if (newValue != null) {
@@ -89,9 +91,9 @@ public class ItemFormController {
     }
 
     void clear() {
-        controller.loadData();
+        service.loadData();
         tblItemDetails.refresh();
-        txtItemCode.setText(controller.generateItemId());
+        txtItemCode.setText(service.generateItemId());
         txtDescription.clear();
         txtQty.clear();
         txtUnitPrice.clear();
@@ -106,7 +108,7 @@ public class ItemFormController {
         int qty = Integer.parseInt(txtQty.getText());
         double unitPrice = Double.parseDouble(txtUnitPrice.getText());
 
-        controller.addItem(code, description, category, qty, unitPrice);
+        service.addItem(code, description, category, qty, unitPrice);
         clear();
     }
 
@@ -118,14 +120,14 @@ public class ItemFormController {
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
         String code = tblItemDetails.getSelectionModel().getSelectedItem().getCode();
-        controller.deleteItem(code);
+        service.deleteItem(code);
         clear();
     }
 
     @FXML
     void btnUpdateOnAction(ActionEvent event) {
         ItemDto getCustomerItem = tblItemDetails.getSelectionModel().getSelectedItem();
-        controller.updateItem(
+        service.updateItem(
                 getCustomerItem.getCode(),
                 getCustomerItem.getDescription(),
                 getCustomerItem.getCategory(),

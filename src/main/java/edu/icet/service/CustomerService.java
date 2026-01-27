@@ -4,6 +4,7 @@ import edu.icet.model.dto.CustomerDto;
 import javafx.collections.ObservableList;
 
 public interface CustomerService {
+    String generateCustomerId();
     ObservableList<CustomerDto> getArrayList();
     void loadData();
     void addCustomer(String customerId, String type, String name, String dob, Double salary, String address, String city, String province, String postalCode);

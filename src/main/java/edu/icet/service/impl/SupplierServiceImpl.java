@@ -13,7 +13,8 @@ import java.sql.SQLException;
 public class SupplierServiceImpl implements SupplierService {
     private final ObservableList<SupplierDto> suppliers = FXCollections.observableArrayList();
 
-    String generateSupplierId() {
+    @Override
+    public String generateSupplierId() {
         if (suppliers.isEmpty()) {
             return "S0001";
         }

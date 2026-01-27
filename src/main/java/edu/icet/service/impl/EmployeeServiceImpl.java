@@ -15,7 +15,8 @@ import java.time.LocalDate;
 public class EmployeeServiceImpl implements EmployeeService {
     private final ObservableList<EmployeeDto> employees = FXCollections.observableArrayList();
 
-    String generateEmployeeId() {
+    @Override
+    public String generateEmployeeId() {
         if (employees.isEmpty()) {
             return "E0001";
         }

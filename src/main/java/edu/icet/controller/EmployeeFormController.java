@@ -1,6 +1,8 @@
 package edu.icet.controller;
 
 import edu.icet.model.dto.EmployeeDto;
+import edu.icet.service.EmployeeService;
+import edu.icet.service.impl.EmployeeServiceImpl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +23,7 @@ import java.time.LocalDate;
 public class EmployeeFormController {
 
     private final Stage stage = new Stage();
-    private final EmployeeController controller = new EmployeeController();
+    private final EmployeeService service = new EmployeeServiceImpl();
 
     @FXML
     private TableColumn<?, ?> colDateOfBirth;
@@ -85,11 +87,11 @@ public class EmployeeFormController {
 
     @FXML
     void initialize() {
-        controller.loadData();
+        service.loadData();
         GaussianBlur blur = new GaussianBlur(10);
         rootPane.setEffect(blur);
 
-        txtEmployeeId.setText(controller.generateEmployeeId());
+        txtEmployeeId.setText(service.generateEmployeeId());
 
         colEmployeeId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colEmployeeName.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -102,7 +104,7 @@ public class EmployeeFormController {
         colJoinedDate.setCellValueFactory(new PropertyValueFactory<>("joinedDate"));
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        tblEmployeeDetails.setItems(controller.getArrayList());
+        tblEmployeeDetails.setItems(service.getArrayList());
 
         tblEmployeeDetails.getSelectionModel().selectedItemProperty().addListener((observableValue, employeeDto, newValue) -> {
             if(newValue!=null){
@@ -129,7 +131,7 @@ public class EmployeeFormController {
         String contactNumber = txtContactNumber.getText();
         String address = txtEmployeeAddress.getText();
 
-        controller.addEmployee(employeeId, name, nic, dob, position, salary, contactNumber, address);
+        service.addEmployee(employeeId, name, nic, dob, position, salary, contactNumber, address);
         clear();
     }
 
@@ -154,14 +156,14 @@ public class EmployeeFormController {
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
         String id = tblEmployeeDetails.getSelectionModel().getSelectedItem().getId();
-        controller.deleteEmployee(id);
+        service.deleteEmployee(id);
         clear();
     }
 
     @FXML
     void btnUpdateOnAction(ActionEvent event) {
         EmployeeDto getSelectedItem = tblEmployeeDetails.getSelectionModel().getSelectedItem();
-        controller.updateEmployee(
+        service.updateEmployee(
                 getSelectedItem.getId(),
                 getSelectedItem.getName(),
                 getSelectedItem.getNic(),
@@ -175,8 +177,8 @@ public class EmployeeFormController {
     }
 
     void clear() {
-        txtEmployeeId.setText(controller.generateEmployeeId());
-        controller.loadData();
+        txtEmployeeId.setText(service.generateEmployeeId());
+        service.loadData();
         tblEmployeeDetails.refresh();
         txtEmployeeName.clear();
         txtEmployeeNic.clear();

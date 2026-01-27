@@ -1,6 +1,8 @@
 package edu.icet.controller;
 
 import edu.icet.model.dto.SupplierDto;
+import edu.icet.service.SupplierService;
+import edu.icet.service.impl.SupplierServiceImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,7 +23,7 @@ import java.io.IOException;
 public class SupplierFormController {
 
     private final Stage stage = new Stage();
-    private final SupplierController controller = new SupplierController();
+    private final SupplierService service = new SupplierServiceImpl();
 
     @FXML
     private TableColumn<?, ?> colCity;
@@ -88,7 +90,7 @@ public class SupplierFormController {
         GaussianBlur blur = new GaussianBlur(10);
         rootPane.setEffect(blur);
 
-        txtSupplierId.setText(controller.generateSupplierId());
+        txtSupplierId.setText(service.generateSupplierId());
 
         colSupplierId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colSupplierName.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -100,7 +102,7 @@ public class SupplierFormController {
         colPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-        tblSupplierDetails.setItems(controller.getArrayList());
+        tblSupplierDetails.setItems(service.getArrayList());
 
         tblSupplierDetails.getSelectionModel().selectedItemProperty().addListener(((observableValue, supplierDto, newValue) -> {
             if(newValue != null){
@@ -129,7 +131,7 @@ public class SupplierFormController {
         String phone = txtPhoneNumber.getText();
         String email = txtEmail.getText();
 
-        controller.addSupplier(id, name, companyName, address, city, province, postalCode, phone, email);
+        service.addSupplier(id, name, companyName, address, city, province, postalCode, phone, email);
         clear();
     }
 
@@ -153,13 +155,13 @@ public class SupplierFormController {
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
         String getSupplierId = tblSupplierDetails.getSelectionModel().getSelectedItem().getId();
-        controller.deleteSupplier(getSupplierId);
+        service.deleteSupplier(getSupplierId);
     }
 
     @FXML
     void btnUpdateOnAction(ActionEvent event) {
         SupplierDto getSupplierItem = tblSupplierDetails.getSelectionModel().getSelectedItem();
-        controller.updateSupplier(
+        service.updateSupplier(
                 getSupplierItem.getId(),
                 getSupplierItem.getName(),
                 getSupplierItem.getCompanyName(),
@@ -175,8 +177,8 @@ public class SupplierFormController {
 
     void clear(){
         tblSupplierDetails.refresh();
-        controller.loadData();
-        txtSupplierId.setText(controller.generateSupplierId());
+        service.loadData();
+        txtSupplierId.setText(service.generateSupplierId());
         txtSupplierName.clear();
         txtCompanyName.clear();
         txtSupplierAddress.clear();

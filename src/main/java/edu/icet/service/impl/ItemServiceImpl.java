@@ -16,7 +16,8 @@ public class ItemServiceImpl implements ItemService {
             new ItemDto("I0002", "Orange", "Fruit", 5, 350.0)
     );
 
-    String generateItemId() {
+    @Override
+    public String generateItemId() {
         if (items.isEmpty()) {
             return "I0001";
         }

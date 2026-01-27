@@ -1,6 +1,8 @@
 package edu.icet.controller;
 
 import edu.icet.model.dto.CustomerDto;
+import edu.icet.service.CustomerService;
+import edu.icet.service.impl.CustomerServiceImpl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,7 +22,7 @@ import java.time.LocalDate;
 public class CustomerFormController {
 
     private final Stage stage = new Stage();
-    private final CustomerController controller = new CustomerController();
+    private final CustomerService service = new CustomerServiceImpl();
 
     @FXML
     private Button btnAdd;
@@ -87,7 +89,7 @@ public class CustomerFormController {
 
     @FXML
     void initialize() {
-        controller.loadData();
+        service.loadData();
         GaussianBlur blur = new GaussianBlur(10);
         rootPane.setEffect(blur);
 
@@ -95,7 +97,7 @@ public class CustomerFormController {
                 "Mr", "Mrs", "Miss"
         ));
 
-        txtCustomerId.setText(controller.generateCustomerId());
+        txtCustomerId.setText(service.generateCustomerId());
 
         colCustomerId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colCustomerName.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -107,7 +109,7 @@ public class CustomerFormController {
         colProvince.setCellValueFactory(new PropertyValueFactory<>("province"));
         colPostalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
 
-        tblCustomerDetails.setItems(controller.getArrayList());
+        tblCustomerDetails.setItems(service.getArrayList());
 
         tblCustomerDetails.getSelectionModel().selectedItemProperty().addListener(((observableValue, customer, newValue) -> {
             if (newValue != null) {
@@ -136,7 +138,7 @@ public class CustomerFormController {
         String province = txtProvince.getText();
         String postalCode = txtPostalCode.getText();
 
-        controller.addCustomer(customerId, type, name, dob, salary, address, city, province, postalCode);
+        service.addCustomer(customerId, type, name, dob, salary, address, city, province, postalCode);
         clear();
     }
 
@@ -148,7 +150,7 @@ public class CustomerFormController {
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
         CustomerDto getCustomerItem = tblCustomerDetails.getSelectionModel().getSelectedItem();
-        controller.deleteCustomer(getCustomerItem.getId());
+        service.deleteCustomer(getCustomerItem.getId());
         clear();
     }
 
@@ -164,7 +166,7 @@ public class CustomerFormController {
         String province = txtProvince.getText();
         String postalCode = txtPostalCode.getText();
 
-        controller.updateCustomer(getSelectedItem.getId(), type, name, dob, salary, address, city, province, postalCode);
+        service.updateCustomer(getSelectedItem.getId(), type, name, dob, salary, address, city, province, postalCode);
         clear();
     }
 
@@ -183,8 +185,8 @@ public class CustomerFormController {
 
 
     void clear() {
-        controller.loadData();
-        txtCustomerId.setText(controller.generateCustomerId());
+        service.loadData();
+        txtCustomerId.setText(service.generateCustomerId());
         txtCustomerName.clear();
         dateBoxBirthday.setValue(null);
         txtCustomerSalary.clear();

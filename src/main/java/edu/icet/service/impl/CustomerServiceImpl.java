@@ -13,6 +13,7 @@ import java.sql.SQLException;
 public class CustomerServiceImpl implements CustomerService {
     private final ObservableList<CustomerDto> customers = FXCollections.observableArrayList();
 
+    @Override
     public String generateCustomerId() {
         if (customers.isEmpty()) {
             return "C001";
