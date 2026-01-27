@@ -1,8 +1,8 @@
-package edu.icet.controller;
+package edu.icet.service.impl;
 
-import edu.icet.service.ItemService;
 import edu.icet.db.DBConnection;
 import edu.icet.model.dto.ItemDto;
+import edu.icet.service.ItemService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,7 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ItemController implements ItemService {
+public class ItemServiceImpl implements ItemService {
     private final ObservableList<ItemDto> items = FXCollections.observableArrayList(
             new ItemDto("I0001", "Apple", "Fruit", 10, 250.0),
             new ItemDto("I0002", "Orange", "Fruit", 5, 350.0)

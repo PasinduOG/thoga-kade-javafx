@@ -1,4 +1,4 @@
-package edu.icet.controller;
+package edu.icet.service.impl;
 
 import edu.icet.db.DBConnection;
 import edu.icet.model.dto.EmployeeDto;
@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-public class EmployeeController implements EmployeeService {
+public class EmployeeServiceImpl implements EmployeeService {
     private final ObservableList<EmployeeDto> employees = FXCollections.observableArrayList();
 
     String generateEmployeeId() {

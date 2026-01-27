@@ -1,4 +1,4 @@
-package edu.icet.controller;
+package edu.icet.service.impl;
 
 import edu.icet.db.DBConnection;
 import edu.icet.model.dto.SupplierDto;
@@ -10,7 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SupplierController implements SupplierService {
+public class SupplierServiceImpl implements SupplierService {
     private final ObservableList<SupplierDto> suppliers = FXCollections.observableArrayList();
 
     String generateSupplierId() {

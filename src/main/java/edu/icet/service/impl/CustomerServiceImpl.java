@@ -1,8 +1,8 @@
-package edu.icet.controller;
+package edu.icet.service.impl;
 
-import edu.icet.service.CustomerService;
 import edu.icet.db.DBConnection;
 import edu.icet.model.dto.CustomerDto;
+import edu.icet.service.CustomerService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,8 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CustomerController implements CustomerService {
-
+public class CustomerServiceImpl implements CustomerService {
     private final ObservableList<CustomerDto> customers = FXCollections.observableArrayList();
 
     public String generateCustomerId() {
