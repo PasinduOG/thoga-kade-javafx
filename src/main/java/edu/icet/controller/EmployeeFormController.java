@@ -1,14 +1,11 @@
 package edu.icet.controller;
 
-import edu.icet.model.Employee;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import edu.icet.model.dto.EmployeeDto;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -19,16 +16,12 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 public class EmployeeFormController {
 
     private final Stage stage = new Stage();
-
-    private final ObservableList<Employee> employees = FXCollections.observableArrayList();
-    private String employeeId = generateEmployeeId();
-
-    @FXML
-    private ComboBox<String> cBoxStatus;
+    private final EmployeeController controller = new EmployeeController();
 
     @FXML
     private TableColumn<?, ?> colDateOfBirth;
@@ -64,13 +57,10 @@ public class EmployeeFormController {
     private DatePicker dateBoxDateOfBirth;
 
     @FXML
-    private DatePicker dateBoxJoinedDate;
-
-    @FXML
     private ImageView rootPane;
 
     @FXML
-    private TableView<Employee> tblEmployeeDetails;
+    private TableView<EmployeeDto> tblEmployeeDetails;
 
     @FXML
     private TextField txtContactNumber;
@@ -93,25 +83,13 @@ public class EmployeeFormController {
     @FXML
     private TextField txtEmployeeSalary;
 
-    String generateEmployeeId() {
-        if (employees.isEmpty()) {
-            return "S0001";
-        }
-        String lastItemId = employees.get(employees.size()-1).getId();
-        int lastNumber = Integer.parseInt(lastItemId.substring(1));
-        return String.format("E%04d", lastNumber + 1);
-    }
-
     @FXML
-    void initialize(){
+    void initialize() {
+        controller.loadData();
         GaussianBlur blur = new GaussianBlur(10);
         rootPane.setEffect(blur);
 
-        txtEmployeeId.setText(employeeId);
-
-        cBoxStatus.setItems(FXCollections.observableArrayList(
-                "Active", "Inactive"
-        ));
+        txtEmployeeId.setText(controller.generateEmployeeId());
 
         colEmployeeId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colEmployeeName.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -124,38 +102,35 @@ public class EmployeeFormController {
         colJoinedDate.setCellValueFactory(new PropertyValueFactory<>("joinedDate"));
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        tblEmployeeDetails.setItems(employees);
+        tblEmployeeDetails.setItems(controller.getArrayList());
+
+        tblEmployeeDetails.getSelectionModel().selectedItemProperty().addListener((observableValue, employeeDto, newValue) -> {
+            if(newValue!=null){
+                txtEmployeeId.setText(newValue.getId());
+                txtEmployeeName.setText(newValue.getName());
+                txtEmployeeNic.setText(newValue.getNic());
+                dateBoxDateOfBirth.setValue(LocalDate.parse(newValue.getDob()));
+                txtEmployeePosition.setText(newValue.getPosition());
+                txtEmployeeSalary.setText(String.valueOf(newValue.getSalary()));
+                txtContactNumber.setText(newValue.getContactNumber());
+                txtEmployeeAddress.setText(newValue.getAddress());
+            }
+        });
     }
 
     @FXML
     void btnAddOnAction(ActionEvent event) {
+        String employeeId = txtEmployeeId.getText();
         String name = txtEmployeeName.getText();
         String nic = txtEmployeeNic.getText();
         String dob = String.valueOf(dateBoxDateOfBirth.getValue());
         String position = txtEmployeePosition.getText();
-        Double salary = Double.parseDouble(txtEmployeeSalary.getText());
+        double salary = Double.parseDouble(txtEmployeeSalary.getText());
         String contactNumber = txtContactNumber.getText();
         String address = txtEmployeeAddress.getText();
-        String joinedDate = String.valueOf(dateBoxJoinedDate.getValue());
-        String status = cBoxStatus.getValue();
 
-        Employee employee = new Employee(
-                employeeId,
-                name,
-                nic,
-                dob,
-                position,
-                salary,
-                contactNumber,
-                address,
-                joinedDate,
-                status
-        );
-
-        employees.add(employee);
-
-        employeeId = generateEmployeeId();
-        txtEmployeeId.setText(employeeId);
+        controller.addEmployee(employeeId, name, nic, dob, position, salary, contactNumber, address);
+        clear();
     }
 
     @FXML
@@ -178,27 +153,31 @@ public class EmployeeFormController {
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
-        int getSelectedIndex = tblEmployeeDetails.getSelectionModel().getSelectedIndex();
-        employees.remove(getSelectedIndex);
+        String id = tblEmployeeDetails.getSelectionModel().getSelectedItem().getId();
+        controller.deleteEmployee(id);
+        clear();
     }
 
     @FXML
     void btnUpdateOnAction(ActionEvent event) {
-        Employee getSelectedItem = tblEmployeeDetails.getSelectionModel().getSelectedItem();
-        getSelectedItem.setName(txtEmployeeName.getText());
-        getSelectedItem.setNic(txtEmployeeNic.getText());
-        getSelectedItem.setDob(String.valueOf(dateBoxDateOfBirth.getValue()));
-        getSelectedItem.setPosition(txtEmployeePosition.getText());
-        getSelectedItem.setSalary(Double.valueOf(txtEmployeeSalary.getText()));
-        getSelectedItem.setContactNumber(txtContactNumber.getText());
-        getSelectedItem.setAddress(txtEmployeeAddress.getText());
-        getSelectedItem.setJoinedDate(String.valueOf(dateBoxJoinedDate.getValue()));
-        getSelectedItem.setStatus(cBoxStatus.getValue());
-        tblEmployeeDetails.refresh();
+        EmployeeDto getSelectedItem = tblEmployeeDetails.getSelectionModel().getSelectedItem();
+        controller.updateEmployee(
+                getSelectedItem.getId(),
+                getSelectedItem.getName(),
+                getSelectedItem.getNic(),
+                getSelectedItem.getDob(),
+                getSelectedItem.getPosition(),
+                getSelectedItem.getSalary(),
+                getSelectedItem.getContactNumber(),
+                getSelectedItem.getAddress()
+        );
+        clear();
     }
 
     void clear() {
-        txtEmployeeId.setText(employeeId);
+        txtEmployeeId.setText(controller.generateEmployeeId());
+        controller.loadData();
+        tblEmployeeDetails.refresh();
         txtEmployeeName.clear();
         txtEmployeeNic.clear();
         dateBoxDateOfBirth.setValue(null);
@@ -206,7 +185,6 @@ public class EmployeeFormController {
         txtEmployeeSalary.clear();
         txtContactNumber.clear();
         txtEmployeeAddress.clear();
-        cBoxStatus.setValue(null);
     }
 
 }

@@ -6,15 +6,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.collections.FXCollections;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -23,8 +20,10 @@ import java.time.LocalDate;
 public class CustomerFormController {
 
     private final Stage stage = new Stage();
-    CustomerController controller = new CustomerController();
-    private String customerId;
+    private final CustomerController controller = new CustomerController();
+
+    @FXML
+    private Button btnAdd;
 
     @FXML
     private ImageView rootPane;
@@ -88,6 +87,7 @@ public class CustomerFormController {
 
     @FXML
     void initialize() {
+        controller.loadData();
         GaussianBlur blur = new GaussianBlur(10);
         rootPane.setEffect(blur);
 
@@ -95,10 +95,7 @@ public class CustomerFormController {
                 "Mr", "Mrs", "Miss"
         ));
 
-        controller.loadData();
-
-        customerId = controller.generateCustomerId();
-        txtCustomerId.setText(customerId);
+        txtCustomerId.setText(controller.generateCustomerId());
 
         colCustomerId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colCustomerName.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -129,6 +126,7 @@ public class CustomerFormController {
 
     @FXML
     void btnAddOnAction(ActionEvent event) {
+        String customerId = txtCustomerId.getText();
         String type = cBoxCustomerType.getValue();
         String name = txtCustomerName.getText();
         String dob = String.valueOf(dateBoxBirthday.getValue());
@@ -139,9 +137,7 @@ public class CustomerFormController {
         String postalCode = txtPostalCode.getText();
 
         controller.addCustomer(customerId, type, name, dob, salary, address, city, province, postalCode);
-        customerId = controller.generateCustomerId();
-        controller.loadData();
-        txtCustomerId.setText(customerId);
+        clear();
     }
 
     @FXML
@@ -153,7 +149,7 @@ public class CustomerFormController {
     void btnDeleteOnAction(ActionEvent event) {
         CustomerDto getCustomerItem = tblCustomerDetails.getSelectionModel().getSelectedItem();
         controller.deleteCustomer(getCustomerItem.getId());
-        controller.loadData();
+        clear();
     }
 
     @FXML
@@ -169,7 +165,6 @@ public class CustomerFormController {
         String postalCode = txtPostalCode.getText();
 
         controller.updateCustomer(getSelectedItem.getId(), type, name, dob, salary, address, city, province, postalCode);
-        controller.loadData();
         clear();
     }
 
@@ -188,8 +183,8 @@ public class CustomerFormController {
 
 
     void clear() {
-        customerId = controller.generateCustomerId();
-        txtCustomerId.setText(customerId);
+        controller.loadData();
+        txtCustomerId.setText(controller.generateCustomerId());
         txtCustomerName.clear();
         dateBoxBirthday.setValue(null);
         txtCustomerSalary.clear();
@@ -198,6 +193,11 @@ public class CustomerFormController {
         txtProvince.clear();
         txtPostalCode.clear();
         tblCustomerDetails.getSelectionModel().clearSelection();
+        btnAdd.setDisable(false);
+    }
+
+    public void selectTableDataOnMouseClicked(MouseEvent event) {
+        btnAdd.setDisable(true);
     }
 }
 

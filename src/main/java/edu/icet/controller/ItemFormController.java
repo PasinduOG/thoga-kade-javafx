@@ -1,13 +1,13 @@
 package edu.icet.controller;
 
-import edu.icet.model.Item;
+import edu.icet.model.dto.ItemDto;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -21,12 +21,7 @@ import java.io.IOException;
 public class ItemFormController {
 
     private final Stage stage = new Stage();
-
-    private final ObservableList<Item> items = FXCollections.observableArrayList(
-            new Item("I0001", "Apple", "Fruit", 10, 250.0),
-            new Item("I0002", "Orange", "Fruit", 5, 350.0)
-    );
-    private String itemId = generateItemId();
+    private final ItemController controller = new ItemController();
 
     @FXML
     private TableColumn<?, ?> colCategory;
@@ -47,10 +42,10 @@ public class ItemFormController {
     private ImageView rootPane;
 
     @FXML
-    private TableView<Item> tblItemDetails;
+    private TableView<ItemDto> tblItemDetails;
 
     @FXML
-    private TextField txtCategory;
+    private ComboBox<String> cBoxCategory;
 
     @FXML
     private TextField txtDescription;
@@ -66,9 +61,13 @@ public class ItemFormController {
 
     @FXML
     void initialize() {
+        controller.loadData();
         GaussianBlur blur = new GaussianBlur(10);
         rootPane.setEffect(blur);
-        txtItemCode.setText(itemId);
+        txtItemCode.setText(controller.generateItemId());
+        cBoxCategory.setItems(FXCollections.observableArrayList(
+                "Electronics", "Grocery", "Furniture", "Clothing"
+        ));
 
         colItemCode.setCellValueFactory(new PropertyValueFactory<>("code"));
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -76,13 +75,13 @@ public class ItemFormController {
         colQty.setCellValueFactory(new PropertyValueFactory<>("qty"));
         colUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
 
-        tblItemDetails.setItems(items);
+        tblItemDetails.setItems(controller.getArrayList());
 
         tblItemDetails.getSelectionModel().selectedItemProperty().addListener(((observableValue, item, newValue) -> {
             if (newValue != null) {
                 txtItemCode.setText(newValue.getCode());
                 txtDescription.setText(newValue.getDescription());
-                txtCategory.setText(newValue.getCategory());
+                cBoxCategory.setValue(newValue.getCategory());
                 txtQty.setText(String.valueOf(newValue.getQty()));
                 txtUnitPrice.setText(String.valueOf(newValue.getUnitPrice()));
             }
@@ -90,36 +89,24 @@ public class ItemFormController {
     }
 
     void clear() {
-        itemId = generateItemId();
-        txtItemCode.setText(itemId);
+        controller.loadData();
+        tblItemDetails.refresh();
+        txtItemCode.setText(controller.generateItemId());
         txtDescription.clear();
-        txtCategory.clear();
         txtQty.clear();
         txtUnitPrice.clear();
         tblItemDetails.getSelectionModel().clearSelection();
     }
 
-    String generateItemId() {
-        if (items.isEmpty()) {
-            return "I0001";
-        }
-        String lastItemId = items.get(items.size()-1).getCode();
-        int lastNumber = Integer.parseInt(lastItemId.substring(1));
-        return String.format("I%04d", lastNumber + 1);
-    }
-
     @FXML
     void btnAddOnAction(ActionEvent event) {
+        String code = txtItemCode.getText();
         String description = txtDescription.getText();
-        String category = txtCategory.getText();
-        Integer qty = Integer.parseInt(txtQty.getText());
-        Double unitPrice = Double.parseDouble(txtUnitPrice.getText());
+        String category = cBoxCategory.getValue();
+        int qty = Integer.parseInt(txtQty.getText());
+        double unitPrice = Double.parseDouble(txtUnitPrice.getText());
 
-        Item item = new Item(itemId, description, category, qty, unitPrice);
-        items.add(item);
-
-        itemId = generateItemId();
-        txtItemCode.setText(itemId);
+        controller.addItem(code, description, category, qty, unitPrice);
         clear();
     }
 
@@ -130,18 +117,22 @@ public class ItemFormController {
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
-        int getCustomerIndex = tblItemDetails.getSelectionModel().getSelectedIndex();
-        items.remove(getCustomerIndex);
+        String code = tblItemDetails.getSelectionModel().getSelectedItem().getCode();
+        controller.deleteItem(code);
+        clear();
     }
 
     @FXML
     void btnUpdateOnAction(ActionEvent event) {
-        Item getCustomerItem = tblItemDetails.getSelectionModel().getSelectedItem();
-        getCustomerItem.setDescription(txtDescription.getText());
-        getCustomerItem.setCategory(txtCategory.getText());
-        getCustomerItem.setQty(Integer.parseInt(txtQty.getText()));
-        getCustomerItem.setUnitPrice(Double.parseDouble(txtUnitPrice.getText()));
-        tblItemDetails.refresh();
+        ItemDto getCustomerItem = tblItemDetails.getSelectionModel().getSelectedItem();
+        controller.updateItem(
+                getCustomerItem.getCode(),
+                getCustomerItem.getDescription(),
+                getCustomerItem.getCategory(),
+                getCustomerItem.getQty(),
+                getCustomerItem.getUnitPrice()
+        );
+        clear();
     }
 
     @FXML

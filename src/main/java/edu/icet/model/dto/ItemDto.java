@@ -1,15 +1,11 @@
-package edu.icet.model;
+package edu.icet.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-@Setter
-@Getter
-public class Item {
+public class ItemDto {
     private String code;
     private String description;
     private String category;

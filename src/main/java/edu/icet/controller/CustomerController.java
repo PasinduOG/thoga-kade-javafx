@@ -1,6 +1,6 @@
 package edu.icet.controller;
 
-import edu.icet.controller.service.CustomerService;
+import edu.icet.service.CustomerService;
 import edu.icet.db.DBConnection;
 import edu.icet.model.dto.CustomerDto;
 import javafx.collections.FXCollections;
@@ -30,6 +30,7 @@ public class CustomerController implements CustomerService {
 
     @Override
     public void loadData(){
+        customers.clear();
         try {
             PreparedStatement statement = DBConnection.getInstance().connection().prepareStatement("SELECT * FROM customer");
             ResultSet resultSet = statement.executeQuery();
@@ -46,7 +47,6 @@ public class CustomerController implements CustomerService {
                         resultSet.getString("Province"),
                         resultSet.getString("PostalCode")
                 );
-
                 customers.add(customerDto);
             }
         } catch (SQLException e) {

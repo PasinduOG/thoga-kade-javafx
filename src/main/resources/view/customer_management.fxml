@@ -20,7 +20,7 @@
          </image>
       </ImageView>
       <AnchorPane opacity="0.5" prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: Black;" />
-      <TableView fx:id="tblCustomerDetails" layoutX="40.0" layoutY="280.0" prefHeight="206.0" prefWidth="722.0">
+      <TableView fx:id="tblCustomerDetails" layoutX="40.0" layoutY="280.0" onMouseClicked="#selectTableDataOnMouseClicked" prefHeight="206.0" prefWidth="722.0">
         <columns>
           <TableColumn fx:id="colCustomerId" prefWidth="53.0" text="ID" />
           <TableColumn fx:id="colCustomerType" prefWidth="60.0" text="Type" />
@@ -50,7 +50,7 @@
                   <Font name="System Bold" size="30.0" />
                </font>
             </Text>
-            <Button layoutX="128.0" layoutY="214.0" mnemonicParsing="false" onAction="#btnAddOnAction" prefHeight="25.0" prefWidth="95.0" text="Add" />
+            <Button fx:id="btnAdd" layoutX="128.0" layoutY="214.0" mnemonicParsing="false" onAction="#btnAddOnAction" prefHeight="25.0" prefWidth="95.0" text="Add" />
             <Button layoutX="251.0" layoutY="214.0" mnemonicParsing="false" onAction="#btnUpdateOnAction" prefHeight="25.0" prefWidth="95.0" text="Update" />
             <Button layoutX="373.0" layoutY="214.0" mnemonicParsing="false" onAction="#btnDeleteOnAction" prefHeight="25.0" prefWidth="95.0" text="Delete" />
             <Button layoutX="495.0" layoutY="214.0" mnemonicParsing="false" onAction="#btnClearOnAction" prefHeight="25.0" prefWidth="95.0" text="Clear Form" />
