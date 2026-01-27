@@ -2,7 +2,7 @@ package edu.icet.controller;
 
 import edu.icet.db.DBConnection;
 import edu.icet.model.dto.EmployeeDto;
-import edu.icet.service.EmployeeService;
+import edu.icet.controller.service.EmployeeService;
 import edu.icet.util.Status;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -102,7 +102,7 @@ public class EmployeeController implements EmployeeService {
     @Override
     public void deleteEmployee(String employeeId) {
         try {
-            PreparedStatement preparedStatement = DBConnection.getInstance().connection().prepareStatement("UPDATE Employee SET status = 'INACTIVE' WHERE id = ?");
+            PreparedStatement preparedStatement = DBConnection.getInstance().connection().prepareStatement("DELETE FROM Employee WHERE id = ?");
             preparedStatement.setObject(1, employeeId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {

@@ -1,6 +1,6 @@
 package edu.icet.controller;
 
-import edu.icet.model.Supplier;
+import edu.icet.model.dto.SupplierDto;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,9 +21,7 @@ import java.io.IOException;
 public class SupplierFormController {
 
     private final Stage stage = new Stage();
-
-    private final ObservableList<Supplier> suppliers = FXCollections.observableArrayList();
-    private String supplierId = generateSupplierId();
+    private final SupplierController controller = new SupplierController();
 
     @FXML
     private TableColumn<?, ?> colCity;
@@ -56,7 +54,7 @@ public class SupplierFormController {
     private ImageView rootPane;
 
     @FXML
-    private TableView<Supplier> tblSupplierDetails;
+    private TableView<SupplierDto> tblSupplierDetails;
 
     @FXML
     private TextField txtCity;
@@ -90,7 +88,7 @@ public class SupplierFormController {
         GaussianBlur blur = new GaussianBlur(10);
         rootPane.setEffect(blur);
 
-        txtSupplierId.setText(supplierId);
+        txtSupplierId.setText(controller.generateSupplierId());
 
         colSupplierId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colSupplierName.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -102,9 +100,9 @@ public class SupplierFormController {
         colPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-        tblSupplierDetails.setItems(suppliers);
+        tblSupplierDetails.setItems(controller.getArrayList());
 
-        tblSupplierDetails.getSelectionModel().selectedItemProperty().addListener(((observableValue, supplier, newValue) -> {
+        tblSupplierDetails.getSelectionModel().selectedItemProperty().addListener(((observableValue, supplierDto, newValue) -> {
             if(newValue != null){
                 txtSupplierId.setText(newValue.getId());
                 txtSupplierName.setText(newValue.getName());
@@ -119,17 +117,9 @@ public class SupplierFormController {
         }));
     }
 
-    String generateSupplierId() {
-        if (suppliers.isEmpty()) {
-            return "S0001";
-        }
-        String lastItemId = suppliers.get(suppliers.size()-1).getId();
-        int lastNumber = Integer.parseInt(lastItemId.substring(1));
-        return String.format("S%04d", lastNumber + 1);
-    }
-
     @FXML
     void btnAddOnAction(ActionEvent event) {
+        String id = txtSupplierId.getText();
         String name = txtSupplierName.getText();
         String companyName = txtCompanyName.getText();
         String address = txtSupplierAddress.getText();
@@ -139,20 +129,7 @@ public class SupplierFormController {
         String phone = txtPhoneNumber.getText();
         String email = txtEmail.getText();
 
-        Supplier supplier = new Supplier(
-                supplierId,
-                name,
-                companyName,
-                address,
-                city,
-                province,
-                postalCode,
-                phone,
-                email
-        );
-        suppliers.add(supplier);
-        supplierId = generateSupplierId();
-        txtSupplierId.setText(supplierId);
+        controller.addSupplier(id, name, companyName, address, city, province, postalCode, phone, email);
         clear();
     }
 
@@ -175,25 +152,31 @@ public class SupplierFormController {
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
-        int getSupplierIndex = tblSupplierDetails.getSelectionModel().getSelectedIndex();
-        suppliers.remove(getSupplierIndex);
+        String getSupplierId = tblSupplierDetails.getSelectionModel().getSelectedItem().getId();
+        controller.deleteSupplier(getSupplierId);
     }
 
     @FXML
     void btnUpdateOnAction(ActionEvent event) {
-        Supplier getSupplierItem = tblSupplierDetails.getSelectionModel().getSelectedItem();
-        getSupplierItem.setName(txtSupplierName.getText());
-        getSupplierItem.setCompanyName(txtCompanyName.getText());
-        getSupplierItem.setAddress(txtSupplierAddress.getText());
-        getSupplierItem.setCity(txtCity.getText());
-        getSupplierItem.setProvince(txtProvince.getText());
-        getSupplierItem.setPhone(txtPhoneNumber.getText());
-        getSupplierItem.setEmail(txtEmail.getText());
-        tblSupplierDetails.refresh();
+        SupplierDto getSupplierItem = tblSupplierDetails.getSelectionModel().getSelectedItem();
+        controller.updateSupplier(
+                getSupplierItem.getId(),
+                getSupplierItem.getName(),
+                getSupplierItem.getCompanyName(),
+                getSupplierItem.getAddress(),
+                getSupplierItem.getCity(),
+                getSupplierItem.getProvince(),
+                getSupplierItem.getPostalCode(),
+                getSupplierItem.getPhone(),
+                getSupplierItem.getEmail()
+        );
+        clear();
     }
 
     void clear(){
-        txtSupplierId.setText(supplierId);
+        tblSupplierDetails.refresh();
+        controller.loadData();
+        txtSupplierId.setText(controller.generateSupplierId());
         txtSupplierName.clear();
         txtCompanyName.clear();
         txtSupplierAddress.clear();

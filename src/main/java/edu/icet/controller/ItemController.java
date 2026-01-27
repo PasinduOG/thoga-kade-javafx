@@ -1,6 +1,6 @@
 package edu.icet.controller;
 
-import edu.icet.service.ItemService;
+import edu.icet.controller.service.ItemService;
 import edu.icet.db.DBConnection;
 import edu.icet.model.dto.ItemDto;
 import javafx.collections.FXCollections;

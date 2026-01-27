@@ -1,6 +1,6 @@
 package edu.icet.controller;
 
-import edu.icet.service.CustomerService;
+import edu.icet.controller.service.CustomerService;
 import edu.icet.db.DBConnection;
 import edu.icet.model.dto.CustomerDto;
 import javafx.collections.FXCollections;
@@ -101,9 +101,8 @@ public class CustomerController implements CustomerService {
 
     @Override
     public void deleteCustomer(String customerId){
-        PreparedStatement preparedStatement = null;
         try {
-            preparedStatement = DBConnection.getInstance().connection().prepareStatement("DELETE FROM customer WHERE CustID = ?");
+            PreparedStatement preparedStatement = DBConnection.getInstance().connection().prepareStatement("DELETE FROM customer WHERE CustID = ?");
             preparedStatement.setObject(1, customerId);
 
             preparedStatement.executeUpdate();

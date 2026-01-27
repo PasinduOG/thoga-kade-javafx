@@ -1,4 +1,4 @@
-package edu.icet.model;
+package edu.icet.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
-public class Supplier {
+public class SupplierDto {
     private String id;
     private String name;
     private String companyName;

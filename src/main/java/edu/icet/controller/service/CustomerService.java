@@ -1,4 +1,4 @@
-package edu.icet.service;
+package edu.icet.controller.service;
 
 import edu.icet.model.dto.CustomerDto;
 import javafx.collections.ObservableList;
