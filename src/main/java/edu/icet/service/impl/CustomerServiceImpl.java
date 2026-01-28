@@ -1,20 +1,21 @@
 package edu.icet.service.impl;
 
-import edu.icet.db.DBConnection;
 import edu.icet.model.dto.CustomerDto;
+import edu.icet.model.entity.CustomerEntity;
+import edu.icet.repository.CustomerRepository;
+import edu.icet.repository.impl.CustomerRepositoryImpl;
 import edu.icet.service.CustomerService;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerServiceImpl implements CustomerService {
-    private final ObservableList<CustomerDto> customers = FXCollections.observableArrayList();
+
+    private final CustomerRepository repository = new CustomerRepositoryImpl();
 
     @Override
     public String generateCustomerId() {
+        List<CustomerDto> customers = getArrayList();
         if (customers.isEmpty()) {
             return "C001";
         }
@@ -24,90 +25,59 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public ObservableList<CustomerDto> getArrayList(){
+    public List<CustomerDto> getArrayList() {
+        List<CustomerDto> customers = new ArrayList<>();
+        repository.findAll().forEach(entity -> {
+            CustomerDto dto = new CustomerDto(
+                    entity.getId(),
+                    entity.getTitle(),
+                    entity.getName(),
+                    entity.getDob(),
+                    entity.getSalary(),
+                    entity.getAddress(),
+                    entity.getCity(),
+                    entity.getProvince(),
+                    entity.getPostalCode()
+            );
+            customers.add(dto);
+        });
         return customers;
     }
 
     @Override
-    public void loadData(){
-        customers.clear();
-        try {
-            PreparedStatement statement = DBConnection.getInstance().connection().prepareStatement("SELECT * FROM customer");
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                CustomerDto customerDto = new CustomerDto(
-                        resultSet.getString("CustID"),
-                        resultSet.getString("CustTitle"),
-                        resultSet.getString("custName"),
-                        resultSet.getString("DOB"),
-                        resultSet.getDouble("salary"),
-                        resultSet.getString("CustAddress"),
-                        resultSet.getString("City"),
-                        resultSet.getString("Province"),
-                        resultSet.getString("PostalCode")
-                );
-                customers.add(customerDto);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public void addCustomer(CustomerDto customerDto) {
+        CustomerEntity entity = new CustomerEntity(
+                customerDto.getId(),
+                customerDto.getTitle(),
+                customerDto.getName(),
+                customerDto.getDob(),
+                customerDto.getSalary(),
+                customerDto.getAddress(),
+                customerDto.getCity(),
+                customerDto.getProvince(),
+                customerDto.getPostalCode()
+        );
+        repository.save(entity);
     }
 
     @Override
-    public void addCustomer(String customerId, String type, String name, String dob, Double salary, String address, String city, String province, String postalCode){
-        try {
-            PreparedStatement preparedStatement = DBConnection.getInstance().connection().prepareStatement("INSERT INTO customer VALUES (?,?,?,?,?,?,?,?,?)");
-
-            preparedStatement.setObject(1, customerId);
-            preparedStatement.setObject(2, type);
-            preparedStatement.setObject(3, name);
-            preparedStatement.setObject(4, dob);
-            preparedStatement.setObject(5, salary);
-            preparedStatement.setObject(6, address);
-            preparedStatement.setObject(7, city);
-            preparedStatement.setObject(8, province);
-            preparedStatement.setObject(9, postalCode);
-
-            preparedStatement.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public void updateCustomer(CustomerDto customerDto) {
+        CustomerEntity entity = new CustomerEntity(
+                customerDto.getId(),
+                customerDto.getTitle(),
+                customerDto.getName(),
+                customerDto.getDob(),
+                customerDto.getSalary(),
+                customerDto.getAddress(),
+                customerDto.getCity(),
+                customerDto.getProvince(),
+                customerDto.getPostalCode()
+        );
+        repository.update(entity);
     }
 
     @Override
-    public void updateCustomer(String customerId, String type, String name, String dob, Double salary, String address, String city, String province, String postalCode){
-        try {
-            PreparedStatement preparedStatement = DBConnection.getInstance().connection().prepareStatement("UPDATE customer SET CustTitle = ?, CustName = ?, DOB = ?, salary = ?, CustAddress = ?, City = ?, Province = ?, PostalCode = ? WHERE CustID = ?");
-
-            preparedStatement.setObject(1, type);
-            preparedStatement.setObject(2, name);
-            preparedStatement.setObject(3, dob);
-            preparedStatement.setObject(4, salary);
-            preparedStatement.setObject(5, address);
-            preparedStatement.setObject(6, city);
-            preparedStatement.setObject(7, province);
-            preparedStatement.setObject(8, postalCode);
-            preparedStatement.setObject(9, customerId);
-
-            preparedStatement.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    @Override
-    public void deleteCustomer(String customerId){
-        try {
-            PreparedStatement preparedStatement = DBConnection.getInstance().connection().prepareStatement("DELETE FROM customer WHERE CustID = ?");
-            preparedStatement.setObject(1, customerId);
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public void deleteCustomer(String customerId) {
+        repository.deleteById(customerId);
     }
 }

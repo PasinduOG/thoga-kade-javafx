@@ -1,13 +1,13 @@
 package edu.icet.service;
 
 import edu.icet.model.dto.CustomerDto;
-import javafx.collections.ObservableList;
+
+import java.util.List;
 
 public interface CustomerService {
     String generateCustomerId();
-    ObservableList<CustomerDto> getArrayList();
-    void loadData();
-    void addCustomer(String customerId, String type, String name, String dob, Double salary, String address, String city, String province, String postalCode);
-    void updateCustomer(String customerId, String type, String name, String dob, Double salary, String address, String city, String province, String postalCode);
+    List<CustomerDto> getArrayList();
+    void addCustomer(CustomerDto customerDto);
+    void updateCustomer(CustomerDto customerDto);
     void deleteCustomer(String customerId);
 }
